@@ -2,7 +2,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, GLib
 
 
 from os import listdir
@@ -80,19 +80,19 @@ class MainWindow(Gtk.Window):
         self.box = Gtk.Box(spacing=16)
         self.add(self.box)
         self.cputempbutton=Gtk.Button()
-        self.cputemplabel = Gtk.Label("CPU core temp:")
+        self.cputemplabel = Gtk.Label(label="CPU core temp:")
         self.box.pack_start(self.cputemplabel, True, True, 0)
         self.box.pack_start(self.cputempbutton, True, True, 0)
         self.gputempbutton=Gtk.Button()
-        self.gputemplabel = Gtk.Label("GPU core temp:")
+        self.gputemplabel = Gtk.Label(label="GPU core temp:")
         self.box.pack_start(self.gputemplabel, True, True, 0)
         self.box.pack_start(self.gputempbutton, True, True, 0)
         self.enginebutton=Gtk.Button()
-        self.enginelabel = Gtk.Label("Engine clock:")
+        self.enginelabel = Gtk.Label(label="Engine clock:")
         self.box.pack_start(self.enginelabel, True, True, 0)
         self.box.pack_start(self.enginebutton, True, True, 0)
         self.membutton=Gtk.Button()
-        self.memlabel = Gtk.Label("Memory clock:")
+        self.memlabel = Gtk.Label(label="Memory clock:")
         self.box.pack_start(self.memlabel, True, True, 0)
         self.box.pack_start(self.membutton, True, True, 0)
         self.selected = False
@@ -119,14 +119,14 @@ class MainWindow(Gtk.Window):
         dialog.destroy()
 	
     def counter(self):	  
-        self.cputempbutton.set_label(str(int(syscpu.hwmon.hwmon0.temp1_input)/1000) + "C")
-        self.gputempbutton.set_label(str(int(sysgpu.hwmon.hwmon1.temp1_input)/1000) + "C")
+        self.cputempbutton.set_label(str(int(syscpu.hwmon0.temp1_input)/1000) + "C")
+        self.gputempbutton.set_label(str(int(sysgpu.hwmon.hwmon2.temp1_input)/1000) + "C")
         self.enginebutton.set_label(sysgpu.pp_dpm_sclk)
         self.membutton.set_label(sysgpu.pp_dpm_mclk)
         return True
 
 win = MainWindow()
-source_id = GObject.timeout_add(2000, win.counter)
+source_id =  GLib.timeout_add(2000, win.counter)
 
 win.connect("delete-event", Gtk.main_quit)
 win.show_all()
