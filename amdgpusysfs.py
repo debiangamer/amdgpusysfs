@@ -68,7 +68,7 @@ class ClockSelectDialog(Gtk.Dialog):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         clocklist = sysgpu.pp_dpm_sclk.split("\n")
         for x in clocklist:
-            vbox.add(Gtk.CheckButton(x))        
+            vbox.add(Gtk.CheckButton(label=x))        
         box = self.get_content_area()
         box.add(vbox)
         self.show_all()
@@ -134,5 +134,5 @@ Gtk.main()
 if win.selected:
     sysgpu.power_dpm_force_performance_level = "auto"
   
-GObject.source_remove(source_id)  
+GLib.source_remove(source_id)  
 
