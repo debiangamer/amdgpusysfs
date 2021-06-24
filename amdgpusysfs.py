@@ -2,8 +2,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject, GLib
-
+from gi.repository import Gtk, GLib
 
 from os import listdir
 from os.path import isdir, isfile, join, realpath, basename
@@ -56,7 +55,7 @@ class Node(object):
         return iter(getattr(self, name) for name in listdir(self._path_))
 
 sysgpu = Node("/sys/class/drm/card0/device/")
-syscpu = Node("/sys/class/hwmon/hwmon0/device/")
+syscpu = Node("/sys/class/hwmon/hwmon0/")
 
 class ClockSelectDialog(Gtk.Dialog):
 
@@ -68,8 +67,8 @@ class ClockSelectDialog(Gtk.Dialog):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         clocklist = sysgpu.pp_dpm_sclk.split("\n")
         for x in clocklist:
-            vbox.add(Gtk.CheckButton(label=x))        
-        box = self.get_content_area()
+            vbox.add(Gtk.CheckButton(x))        
+        box = self.get_content_area()	
         box.add(vbox)
         self.show_all()
 
@@ -119,14 +118,14 @@ class MainWindow(Gtk.Window):
         dialog.destroy()
 	
     def counter(self):	  
-        self.cputempbutton.set_label(str(int(syscpu.hwmon0.temp1_input)/1000) + "C")
+        self.cputempbutton.set_label(str(int(syscpu.temp1_input)/1000) + "C")
         self.gputempbutton.set_label(str(int(sysgpu.hwmon.hwmon2.temp1_input)/1000) + "C")
         self.enginebutton.set_label(sysgpu.pp_dpm_sclk)
         self.membutton.set_label(sysgpu.pp_dpm_mclk)
         return True
 
 win = MainWindow()
-source_id =  GLib.timeout_add(2000, win.counter)
+source_id = GLib.timeout_add(2000, win.counter)
 
 win.connect("delete-event", Gtk.main_quit)
 win.show_all()
