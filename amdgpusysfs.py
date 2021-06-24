@@ -67,7 +67,7 @@ class ClockSelectDialog(Gtk.Dialog):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         clocklist = sysgpu.pp_dpm_sclk.split("\n")
         for x in clocklist:
-            vbox.add(Gtk.CheckButton(x))        
+            vbox.add(Gtk.CheckButton(label=x))        
         box = self.get_content_area()	
         box.add(vbox)
         self.show_all()
